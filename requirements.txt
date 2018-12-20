@@ -8,3 +8,4 @@ pyspark==2.1.1+hadoop2.7
 requests==2.13.0
 six==1.10.0
 future==0.16.0
+six
