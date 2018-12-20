@@ -11,7 +11,7 @@ SRW_NS = "{http://www.loc.gov/zing/srw/}"
 namespaces = {"dc": 'http://purl.org/dc/elements/1.1/',
               "oai": 'http://www.openarchives.org/OAI/2.0/',
               "oai_dc": "http://www.openarchives.org/OAI/2.0/oai_dc/",
-              "srw_nw": "http://www.loc.gov/zing/srw/"}
+              "srw": "http://www.loc.gov/zing/srw/"}
 
 
 class RepoInvestigatorException(Exception):
@@ -56,7 +56,7 @@ class Record:
             return self.elements
 
     def get_xpath(self):
-        """Get all the values for a given nested MODS element/field."""
+        """Get all the values for a given nested element/field."""
         out = []
         metadata = self.elem
         if metadata is not None:
@@ -74,13 +74,13 @@ class Record:
         """Get the field presence stats for the default report."""
         stats = {}
         metadata = self.elem
-        mods = etree.ElementTree(metadata)
+        record = etree.ElementTree(metadata)
         if len(metadata):
             for desc in metadata.iterdescendants():
                 if len(desc) == 0 and desc.text:
                     # ignore empties, does NOT have children elements
-                    stats.setdefault(re.sub('\[\d+\]','', mods.getelementpath(desc).replace(DC_NS, 'dc:')), 0)
-                    stats[re.sub('\[\d+\]','', mods.getelementpath(desc).replace(DC_NS, 'dc:'))] += 1
+                    stats.setdefault(re.sub('\[\d+\]','', record.getelementpath(desc).replace(DC_NS, 'dc:').replace(SRW_NS, 'srw:').replace(OAI_DC, 'oai_dc:')), 0)
+                    stats[re.sub('\[\d+\]','', record.getelementpath(desc).replace(DC_NS, 'dc:').replace(SRW_NS, 'srw:').replace(OAI_DC, 'oai_dc:'))] += 1
         return stats
 
     def has_element(self):
