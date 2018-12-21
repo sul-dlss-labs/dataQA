@@ -296,10 +296,11 @@ def main():
 
     s = 0
     if args.batch:
-        for file in os.listdir(args.datafile):
-            filename = file
-            if filename.endswith(".xml"):
-                output = process(args.datafile + file, args, stats_aggregate, s)
+        for dirpath, dirnames, filenames in os.walk(args.datafile):
+            for filename in [f for f in filenames if f.endswith(".xml")]:
+                filepath = os.path.join(dirpath, filename)
+                output = process(filepath, args, stats_aggregate, s)
+
     else:
         stats_aggregate = process(args.datafile, args, stats_aggregate, s)
 
